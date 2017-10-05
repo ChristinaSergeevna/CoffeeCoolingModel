@@ -1,7 +1,9 @@
 #pragma once
+#include "formPlot.h"
+#include "formTable.h"
 
 namespace MCM1 {
-
+	
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -56,6 +58,9 @@ namespace MCM1 {
 	private: System::Windows::Forms::Label^  lCoefCooling;
 	private: System::Windows::Forms::Label^  lTimePeriod;
 	private: System::Windows::Forms::Label^  lNumPoints;
+	private: System::Windows::Forms::Button^  bPlot;
+
+	private: System::Windows::Forms::Button^  bTable;
 
 
 
@@ -71,7 +76,8 @@ namespace MCM1 {
 
 
 
-	private: System::Windows::Forms::Button^  bRun;
+
+
 
 
 
@@ -109,7 +115,8 @@ namespace MCM1 {
 			this->lCoefCooling = (gcnew System::Windows::Forms::Label());
 			this->lTimePeriod = (gcnew System::Windows::Forms::Label());
 			this->lNumPoints = (gcnew System::Windows::Forms::Label());
-			this->bRun = (gcnew System::Windows::Forms::Button());
+			this->bPlot = (gcnew System::Windows::Forms::Button());
+			this->bTable = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// tbTemp0
@@ -167,6 +174,7 @@ namespace MCM1 {
 			this->cbRK4->TabIndex = 6;
 			this->cbRK4->Text = L"Рунге-Кутты 4-го порядка";
 			this->cbRK4->UseVisualStyleBackColor = true;
+			this->cbRK4->CheckedChanged += gcnew System::EventHandler(this, &MyForm::cbRK4_CheckedChanged);
 			// 
 			// cbEuler
 			// 
@@ -177,6 +185,7 @@ namespace MCM1 {
 			this->cbEuler->TabIndex = 7;
 			this->cbEuler->Text = L"Эйлера";
 			this->cbEuler->UseVisualStyleBackColor = true;
+			this->cbEuler->CheckedChanged += gcnew System::EventHandler(this, &MyForm::cbEuler_CheckedChanged);
 			// 
 			// cbMEuler
 			// 
@@ -187,6 +196,7 @@ namespace MCM1 {
 			this->cbMEuler->TabIndex = 8;
 			this->cbMEuler->Text = L"Улучшенный Эйлера";
 			this->cbMEuler->UseVisualStyleBackColor = true;
+			this->cbMEuler->CheckedChanged += gcnew System::EventHandler(this, &MyForm::cbMEuler_CheckedChanged);
 			// 
 			// cbEulerKoushi
 			// 
@@ -197,6 +207,7 @@ namespace MCM1 {
 			this->cbEulerKoushi->TabIndex = 9;
 			this->cbEulerKoushi->Text = L"Эйлера-Коши";
 			this->cbEulerKoushi->UseVisualStyleBackColor = true;
+			this->cbEulerKoushi->CheckedChanged += gcnew System::EventHandler(this, &MyForm::cbEulerKoushi_CheckedChanged);
 			// 
 			// lTemp0
 			// 
@@ -244,21 +255,33 @@ namespace MCM1 {
 			this->lNumPoints->TabIndex = 14;
 			this->lNumPoints->Text = L"Количество точек";
 			// 
-			// bRun
+			// bPlot
 			// 
-			this->bRun->Location = System::Drawing::Point(389, 378);
-			this->bRun->Name = L"bRun";
-			this->bRun->Size = System::Drawing::Size(136, 65);
-			this->bRun->TabIndex = 15;
-			this->bRun->Text = L"Жмяк";
-			this->bRun->UseVisualStyleBackColor = true;
+			this->bPlot->Location = System::Drawing::Point(275, 375);
+			this->bPlot->Name = L"bPlot";
+			this->bPlot->Size = System::Drawing::Size(136, 65);
+			this->bPlot->TabIndex = 15;
+			this->bPlot->Text = L"Графики";
+			this->bPlot->UseVisualStyleBackColor = true;
+			this->bPlot->Click += gcnew System::EventHandler(this, &MyForm::bPlot_Click);
+			// 
+			// bTable
+			// 
+			this->bTable->Location = System::Drawing::Point(464, 375);
+			this->bTable->Name = L"bTable";
+			this->bTable->Size = System::Drawing::Size(136, 65);
+			this->bTable->TabIndex = 16;
+			this->bTable->Text = L"Таблица";
+			this->bTable->UseVisualStyleBackColor = true;
+			this->bTable->Click += gcnew System::EventHandler(this, &MyForm::bTable_Click);
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(922, 492);
-			this->Controls->Add(this->bRun);
+			this->Controls->Add(this->bTable);
+			this->Controls->Add(this->bPlot);
 			this->Controls->Add(this->lNumPoints);
 			this->Controls->Add(this->lTimePeriod);
 			this->Controls->Add(this->lCoefCooling);
@@ -282,6 +305,20 @@ namespace MCM1 {
 		}
 #pragma endregion
 	private: System::Void label3_Click(System::Object^  sender, System::EventArgs^  e) {
+
 	}
+
+private: System::Void bPlot_Click(System::Object^  sender, System::EventArgs^  e);
+
+private: System::Void bTable_Click(System::Object^  sender, System::EventArgs^  e);
+
+private: System::Void cbRK4_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void cbEuler_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void cbMEuler_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void cbEulerKoushi_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+}
 };
 }

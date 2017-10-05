@@ -11,8 +11,8 @@ double F(double x, double y)
 
 int Euler(vector<double> &X, vector<double> &Y)
 {
-	double a = 0, b = 1, h = 0.1;
-	double n = (b - a) / h;
+	double a = 0, b = 1, n = 0.1;
+	double h = (b - a) / n;
 
 	X[0] = a; Y[0] = 2;
 	for (int i = 1; i < n; i++)
@@ -23,10 +23,10 @@ int Euler(vector<double> &X, vector<double> &Y)
 	return 0;
 }
 
-int EulerCauchy(vector<double> &X, vector<double> &Y)
+int MEuler(vector<double> &X, vector<double> &Y)
 {
-	double a = 0, b = 1, h = 0.1;
-	double n = (b - a) / h;
+	double a = 0, b = 1, n = 0.1;
+	double h = (b - a) / n;
 	vector<double> Y1(n);
 
 	X[0] = a; Y[0] = 2;
@@ -39,10 +39,10 @@ int EulerCauchy(vector<double> &X, vector<double> &Y)
 	return 0;
 }
 
-int MEuler(vector<double> &X, vector<double> &Y)
+int EulerCauchy(vector<double> &X, vector<double> &Y)
 {
-	double a = 0, b = 1, h = 0.1;
-	double n = (b - a) / h;
+	double a = 0, b = 1, n = 0.1;
+	double h = (b - a) / n;
 	vector<double> Y1(n);
 
 	X[0] = a; Y[0] = 2;
@@ -57,8 +57,8 @@ int MEuler(vector<double> &X, vector<double> &Y)
 
 int RungeKutta4(vector<double> &X, vector<double> &Y)
 {
-	double a = 0, b = 1, h = 0.1;
-	double n = (b - a) / h;
+	double a = 0, b = 1, n = 0.1;
+	double h = (b - a) / n;
 	vector<double> Y1(n);
 	vector<double> Y2(n);
 	vector<double> Y3(n);
