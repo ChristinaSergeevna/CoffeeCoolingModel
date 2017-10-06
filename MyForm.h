@@ -1,6 +1,7 @@
 #pragma once
 #include "formPlot.h"
 #include "formTable.h"
+#include "Equation.h"
 
 namespace MCM1 {
 	
@@ -36,6 +37,8 @@ namespace MCM1 {
 				delete components;
 			}
 		}
+
+	public: Equation *eq = new Equation();
 	private: System::Windows::Forms::TextBox^  tbTemp0;
 	private: System::Windows::Forms::TextBox^  tbRoomTemp;
 	private: System::Windows::Forms::TextBox^  tbTimePeriod;
@@ -44,9 +47,6 @@ namespace MCM1 {
 	protected:
 
 	protected:
-
-
-
 
 	private: System::Windows::Forms::TextBox^  tbNumPoints;
 	private: System::Windows::Forms::CheckBox^  cbRK4;
@@ -61,29 +61,6 @@ namespace MCM1 {
 	private: System::Windows::Forms::Button^  bPlot;
 
 	private: System::Windows::Forms::Button^  bTable;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	protected:
 
@@ -125,6 +102,8 @@ namespace MCM1 {
 			this->tbTemp0->Name = L"tbTemp0";
 			this->tbTemp0->Size = System::Drawing::Size(83, 26);
 			this->tbTemp0->TabIndex = 0;
+			this->tbTemp0->Text = L"90";
+			this->tbTemp0->TextChanged += gcnew System::EventHandler(this, &MyForm::tbTemp0_TextChanged);
 			// 
 			// tbRoomTemp
 			// 
@@ -132,6 +111,8 @@ namespace MCM1 {
 			this->tbRoomTemp->Name = L"tbRoomTemp";
 			this->tbRoomTemp->Size = System::Drawing::Size(83, 26);
 			this->tbRoomTemp->TabIndex = 1;
+			this->tbRoomTemp->Text = L"23";
+			this->tbRoomTemp->TextChanged += gcnew System::EventHandler(this, &MyForm::tbRoomTemp_TextChanged);
 			// 
 			// tbTimePeriod
 			// 
@@ -139,6 +120,8 @@ namespace MCM1 {
 			this->tbTimePeriod->Name = L"tbTimePeriod";
 			this->tbTimePeriod->Size = System::Drawing::Size(83, 26);
 			this->tbTimePeriod->TabIndex = 2;
+			this->tbTimePeriod->Text = L"60";
+			this->tbTimePeriod->TextChanged += gcnew System::EventHandler(this, &MyForm::tbTimePeriod_TextChanged);
 			// 
 			// lHader
 			// 
@@ -157,6 +140,8 @@ namespace MCM1 {
 			this->tbCoefCooling->Name = L"tbCoefCooling";
 			this->tbCoefCooling->Size = System::Drawing::Size(83, 26);
 			this->tbCoefCooling->TabIndex = 4;
+			this->tbCoefCooling->Text = L"0,4";
+			this->tbCoefCooling->TextChanged += gcnew System::EventHandler(this, &MyForm::tbCoefCooling_TextChanged);
 			// 
 			// tbNumPoints
 			// 
@@ -164,6 +149,8 @@ namespace MCM1 {
 			this->tbNumPoints->Name = L"tbNumPoints";
 			this->tbNumPoints->Size = System::Drawing::Size(83, 26);
 			this->tbNumPoints->TabIndex = 5;
+			this->tbNumPoints->Text = L"100";
+			this->tbNumPoints->TextChanged += gcnew System::EventHandler(this, &MyForm::tbNumPoints_TextChanged);
 			// 
 			// cbRK4
 			// 
@@ -226,7 +213,6 @@ namespace MCM1 {
 			this->lRoomTemp->Size = System::Drawing::Size(196, 20);
 			this->lRoomTemp->TabIndex = 11;
 			this->lRoomTemp->Text = L"Комнатная температура";
-			this->lRoomTemp->Click += gcnew System::EventHandler(this, &MyForm::label3_Click);
 			// 
 			// lCoefCooling
 			// 
@@ -299,26 +285,25 @@ namespace MCM1 {
 			this->Controls->Add(this->tbTemp0);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
+			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
-	private: System::Void label3_Click(System::Object^  sender, System::EventArgs^  e) {
-
-	}
 
 private: System::Void bPlot_Click(System::Object^  sender, System::EventArgs^  e);
-
 private: System::Void bTable_Click(System::Object^  sender, System::EventArgs^  e);
-
-private: System::Void cbRK4_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void cbEuler_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void cbMEuler_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void cbEulerKoushi_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-}
+private: System::Void cbRK4_CheckedChanged(System::Object^  sender, System::EventArgs^  e); 
+private: System::Void cbEuler_CheckedChanged(System::Object^  sender, System::EventArgs^  e); 
+private: System::Void cbMEuler_CheckedChanged(System::Object^  sender, System::EventArgs^  e); 
+private: System::Void cbEulerKoushi_CheckedChanged(System::Object^  sender, System::EventArgs^  e); 
+private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e);
+private: System::Void tbTemp0_TextChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void tbRoomTemp_TextChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void tbCoefCooling_TextChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void tbTimePeriod_TextChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void tbNumPoints_TextChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void CheckMethods();
 };
 }

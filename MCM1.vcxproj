@@ -134,7 +134,6 @@
   <ItemGroup>
     <ClCompile Include="formTable.cpp" />
     <ClCompile Include="MyForm.cpp" />
-    <ClCompile Include="Methods.cpp" />
     <ClCompile Include="formPlot.cpp" />
   </ItemGroup>
   <ItemGroup>
