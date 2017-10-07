@@ -9,22 +9,42 @@ using namespace std;
 class Equation {
 public:
 	double TCoffee, TRoom;
-	double r;
-	double time, n;
+	double r, time, n;
 	int selectEuler, selectEulerM, selectEC, selectRK4;
 	vector< vector<double> > table;
 
 	Equation() {}
 	Equation(double tc, double ta, double r, double t, double s) : TCoffee(tc), TRoom(ta), r(r), time(t), n(s) {}
 
-	double F(double r, double Tc, double Tr)
+	double F(double tc)
 	{
-		return -r * (Tc - Tr);
+		return -r * (tc - TRoom);
 	}
 
-	double pukF()
+	double analytSolF(double tc, double tr, double t)
 	{
+		return (tc - TRoom) * exp(-r * t) + TRoom;
+	}
 
+	vector<double> errorMethod(vector<double>(*methodSolF) ())
+	{
+		vector<double> Y(n);
+		vector<double> as = analytSolF();
+		vector<double> ms = methodSolF();
+
+		for (int i = 0; i < n; i++)
+			Y[i] = as[i] - ms[i];
+		return Y;
+	}
+
+	vector<double> analytSolF()
+	{
+		vector<double> Y(n);
+		double h = time / n;
+
+		for (int i = 0; i < n; i++)
+			Y[i] = (TCoffee - TRoom) * exp(-r * i * h) + TRoom;
+		return Y;
 	}
 
 	vector<double> Euler()
@@ -36,7 +56,7 @@ public:
 		for (int i = 1; i < n; i++)
 		{
 			X[i] = i * h;
-			Y[i] = Y[i - 1] + h * F(r, Y[i - 1], TRoom);
+			Y[i] = Y[i - 1] + h * F(Y[i - 1]);
 		}
 		return Y;
 	}
@@ -52,8 +72,8 @@ public:
 		for (int i = 1; i < n; i++)
 		{
 			X[i] = i * h;
-			Y1[i] = Y[i - 1] + h * F(r, Y[i - 1], TRoom);
-			Y[i] = Y[i - 1] + h * (F(r, Y[i - 1], TRoom) + F(r, Y1[i], TRoom)) / 2.0;
+			Y1[i] = Y[i - 1] + h * F(Y[i - 1]);
+			Y[i] = Y[i - 1] + h * (F(Y[i - 1]) + F(Y1[i])) / 2.0;
 		}
 		return Y;
 	}
@@ -69,7 +89,7 @@ public:
 		for (int i = 1; i < n; i++)
 		{
 			X[i] = i * h;
-			Y1[i] = h * F(r, Y[i - 1] + h / 2, TRoom + h * F(r, Y[i], TRoom) / 2);
+			Y1[i] = h * F(Y[i - 1] + h * F(Y[i]) / 2.0);
 			Y[i] = Y[i - 1] + Y1[i];
 		}
 		return Y;
@@ -89,10 +109,10 @@ public:
 		for (int i = 1; i < n; i++)
 		{
 			X[i] = i * h;
-			Y1[i] = h * F(r, Y[i - 1], TRoom);
-			Y2[i] = h * F(r, Y[i - 1] + h / 2.0, TRoom + Y1[i] / 2.0);
-			Y3[i] = h * F(r, Y[i - 1] + h / 2, TRoom + Y2[i] / 2);
-			Y4[i] = h * F(r, Y[i - 1] + h, TRoom + Y3[i]);
+			Y1[i] = h * F(Y[i - 1]);
+			Y2[i] = h * F(Y[i - 1] + Y1[i] / 2.0);
+			Y3[i] = h * F(Y[i - 1] + Y2[i] / 2.0);
+			Y4[i] = h * F(Y[i - 1] + Y3[i]);
 			Y[i] = Y[i - 1] + (Y1[i] + 2 * Y2[i] + 2 * Y3[i] + Y4[i]) / 6;
 		}
 		return Y;

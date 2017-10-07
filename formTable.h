@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Equation.h"
 
 namespace MCM1 {
 
