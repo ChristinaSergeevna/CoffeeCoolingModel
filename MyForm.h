@@ -1,7 +1,7 @@
 #pragma once
-#include "formPlot.h"
-#include "formTable.h"
 #include "Equation.h"
+#include <atlstr.h>
+#include <math.h>
 
 namespace MCM1 {
 	
@@ -61,6 +61,12 @@ namespace MCM1 {
 	private: System::Windows::Forms::Button^  bPlot;
 
 	private: System::Windows::Forms::Button^  bTable;
+	private: System::Windows::Forms::DataVisualization::Charting::Chart^  graph;
+	private: System::Windows::Forms::DataGridView^  dgTable;
+	private: String ^ BaseName;
+	private: DataTable ^ DTable;
+	private: DataSet ^ DSet;
+	private: System::Windows::Forms::PictureBox^  pictureBox1;
 
 	protected:
 
@@ -77,6 +83,14 @@ namespace MCM1 {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^  chartArea7 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Legend^  legend7 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series31 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series32 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series33 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series34 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series35 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->tbTemp0 = (gcnew System::Windows::Forms::TextBox());
 			this->tbRoomTemp = (gcnew System::Windows::Forms::TextBox());
 			this->tbTimePeriod = (gcnew System::Windows::Forms::TextBox());
@@ -94,6 +108,12 @@ namespace MCM1 {
 			this->lNumPoints = (gcnew System::Windows::Forms::Label());
 			this->bPlot = (gcnew System::Windows::Forms::Button());
 			this->bTable = (gcnew System::Windows::Forms::Button());
+			this->graph = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
+			this->dgTable = (gcnew System::Windows::Forms::DataGridView());
+			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->graph))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgTable))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// tbTemp0
@@ -103,7 +123,6 @@ namespace MCM1 {
 			this->tbTemp0->Size = System::Drawing::Size(83, 26);
 			this->tbTemp0->TabIndex = 0;
 			this->tbTemp0->Text = L"90";
-			this->tbTemp0->TextChanged += gcnew System::EventHandler(this, &MyForm::tbTemp0_TextChanged);
 			// 
 			// tbRoomTemp
 			// 
@@ -112,7 +131,6 @@ namespace MCM1 {
 			this->tbRoomTemp->Size = System::Drawing::Size(83, 26);
 			this->tbRoomTemp->TabIndex = 1;
 			this->tbRoomTemp->Text = L"23";
-			this->tbRoomTemp->TextChanged += gcnew System::EventHandler(this, &MyForm::tbRoomTemp_TextChanged);
 			// 
 			// tbTimePeriod
 			// 
@@ -120,8 +138,7 @@ namespace MCM1 {
 			this->tbTimePeriod->Name = L"tbTimePeriod";
 			this->tbTimePeriod->Size = System::Drawing::Size(83, 26);
 			this->tbTimePeriod->TabIndex = 2;
-			this->tbTimePeriod->Text = L"60";
-			this->tbTimePeriod->TextChanged += gcnew System::EventHandler(this, &MyForm::tbTimePeriod_TextChanged);
+			this->tbTimePeriod->Text = L"20";
 			// 
 			// lHader
 			// 
@@ -130,9 +147,8 @@ namespace MCM1 {
 				static_cast<System::Byte>(204)));
 			this->lHader->Location = System::Drawing::Point(149, 28);
 			this->lHader->Name = L"lHader";
-			this->lHader->Size = System::Drawing::Size(657, 39);
+			this->lHader->Size = System::Drawing::Size(0, 39);
 			this->lHader->TabIndex = 3;
-			this->lHader->Text = L" Моделирование процесса остывания кофе";
 			// 
 			// tbCoefCooling
 			// 
@@ -141,7 +157,6 @@ namespace MCM1 {
 			this->tbCoefCooling->Size = System::Drawing::Size(83, 26);
 			this->tbCoefCooling->TabIndex = 4;
 			this->tbCoefCooling->Text = L"0,4";
-			this->tbCoefCooling->TextChanged += gcnew System::EventHandler(this, &MyForm::tbCoefCooling_TextChanged);
 			// 
 			// tbNumPoints
 			// 
@@ -149,13 +164,12 @@ namespace MCM1 {
 			this->tbNumPoints->Name = L"tbNumPoints";
 			this->tbNumPoints->Size = System::Drawing::Size(83, 26);
 			this->tbNumPoints->TabIndex = 5;
-			this->tbNumPoints->Text = L"100";
-			this->tbNumPoints->TextChanged += gcnew System::EventHandler(this, &MyForm::tbNumPoints_TextChanged);
+			this->tbNumPoints->Text = L"10";
 			// 
 			// cbRK4
 			// 
 			this->cbRK4->AutoSize = true;
-			this->cbRK4->Location = System::Drawing::Point(528, 139);
+			this->cbRK4->Location = System::Drawing::Point(98, 373);
 			this->cbRK4->Name = L"cbRK4";
 			this->cbRK4->Size = System::Drawing::Size(230, 24);
 			this->cbRK4->TabIndex = 6;
@@ -166,7 +180,7 @@ namespace MCM1 {
 			// cbEuler
 			// 
 			this->cbEuler->AutoSize = true;
-			this->cbEuler->Location = System::Drawing::Point(528, 182);
+			this->cbEuler->Location = System::Drawing::Point(98, 419);
 			this->cbEuler->Name = L"cbEuler";
 			this->cbEuler->Size = System::Drawing::Size(93, 24);
 			this->cbEuler->TabIndex = 7;
@@ -177,7 +191,7 @@ namespace MCM1 {
 			// cbMEuler
 			// 
 			this->cbMEuler->AutoSize = true;
-			this->cbMEuler->Location = System::Drawing::Point(528, 226);
+			this->cbMEuler->Location = System::Drawing::Point(98, 471);
 			this->cbMEuler->Name = L"cbMEuler";
 			this->cbMEuler->Size = System::Drawing::Size(193, 24);
 			this->cbMEuler->TabIndex = 8;
@@ -188,7 +202,7 @@ namespace MCM1 {
 			// cbEulerKoushi
 			// 
 			this->cbEulerKoushi->AutoSize = true;
-			this->cbEulerKoushi->Location = System::Drawing::Point(528, 272);
+			this->cbEulerKoushi->Location = System::Drawing::Point(98, 516);
 			this->cbEulerKoushi->Name = L"cbEulerKoushi";
 			this->cbEulerKoushi->Size = System::Drawing::Size(139, 24);
 			this->cbEulerKoushi->TabIndex = 9;
@@ -243,7 +257,7 @@ namespace MCM1 {
 			// 
 			// bPlot
 			// 
-			this->bPlot->Location = System::Drawing::Point(275, 375);
+			this->bPlot->Location = System::Drawing::Point(45, 566);
 			this->bPlot->Name = L"bPlot";
 			this->bPlot->Size = System::Drawing::Size(136, 65);
 			this->bPlot->TabIndex = 15;
@@ -253,7 +267,7 @@ namespace MCM1 {
 			// 
 			// bTable
 			// 
-			this->bTable->Location = System::Drawing::Point(464, 375);
+			this->bTable->Location = System::Drawing::Point(219, 566);
 			this->bTable->Name = L"bTable";
 			this->bTable->Size = System::Drawing::Size(136, 65);
 			this->bTable->TabIndex = 16;
@@ -261,11 +275,90 @@ namespace MCM1 {
 			this->bTable->UseVisualStyleBackColor = true;
 			this->bTable->Click += gcnew System::EventHandler(this, &MyForm::bTable_Click);
 			// 
+			// graph
+			// 
+			chartArea7->Name = L"ChartArea1";
+			this->graph->ChartAreas->Add(chartArea7);
+			legend7->Name = L"Legend1";
+			this->graph->Legends->Add(legend7);
+			this->graph->Location = System::Drawing::Point(435, 88);
+			this->graph->Name = L"graph";
+			series31->BorderWidth = 2;
+			series31->ChartArea = L"ChartArea1";
+			series31->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series31->Legend = L"Legend1";
+			series31->Name = L"Euler";
+			series32->BorderWidth = 2;
+			series32->ChartArea = L"ChartArea1";
+			series32->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series32->Legend = L"Legend1";
+			series32->Name = L"Analytical";
+			series33->BorderWidth = 2;
+			series33->ChartArea = L"ChartArea1";
+			series33->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series33->Legend = L"Legend1";
+			series33->Name = L"Euler modified";
+			series34->BorderWidth = 2;
+			series34->ChartArea = L"ChartArea1";
+			series34->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series34->Legend = L"Legend1";
+			series34->Name = L"Euler Cauchy";
+			series35->BorderWidth = 2;
+			series35->ChartArea = L"ChartArea1";
+			series35->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series35->Legend = L"Legend1";
+			series35->Name = L"Runge-Kutta";
+			this->graph->Series->Add(series31);
+			this->graph->Series->Add(series32);
+			this->graph->Series->Add(series33);
+			this->graph->Series->Add(series34);
+			this->graph->Series->Add(series35);
+			this->graph->Size = System::Drawing::Size(785, 571);
+			this->graph->TabIndex = 17;
+			this->graph->Text = L"chart1";
+			// 
+			// dgTable
+			// 
+			this->dgTable->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->dgTable->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::ColumnHeader;
+			this->dgTable->BackgroundColor = System::Drawing::SystemColors::Window;
+			this->dgTable->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->dgTable->CellBorderStyle = System::Windows::Forms::DataGridViewCellBorderStyle::Sunken;
+			this->dgTable->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dgTable->GridColor = System::Drawing::SystemColors::Window;
+			this->dgTable->Location = System::Drawing::Point(435, 0);
+			this->dgTable->Name = L"dgTable";
+			this->dgTable->ReadOnly = true;
+			this->dgTable->RowHeadersVisible = false;
+			this->dgTable->RowHeadersWidth = 20;
+			this->dgTable->RowTemplate->Height = 28;
+			this->dgTable->Size = System::Drawing::Size(793, 659);
+			this->dgTable->TabIndex = 18;
+			// 
+			// pictureBox1
+			// 
+			this->pictureBox1->ImageLocation = L"C:\\Users\\Christine\\Downloads\\Telegram Desktop\\CoffeeCoolingModel-master\\CoffeeCoo"
+				L"lingModel-master\\eq.png";
+			this->pictureBox1->InitialImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.InitialImage")));
+			this->pictureBox1->Location = System::Drawing::Point(32, 42);
+			this->pictureBox1->Name = L"pictureBox1";
+			this->pictureBox1->Size = System::Drawing::Size(323, 62);
+			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+			this->pictureBox1->TabIndex = 19;
+			this->pictureBox1->TabStop = false;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(922, 492);
+			this->AutoSize = true;
+			this->BackColor = System::Drawing::SystemColors::Window;
+			this->ClientSize = System::Drawing::Size(1224, 655);
+			this->Controls->Add(this->pictureBox1);
+			this->Controls->Add(this->dgTable);
+			this->Controls->Add(this->graph);
 			this->Controls->Add(this->bTable);
 			this->Controls->Add(this->bPlot);
 			this->Controls->Add(this->lNumPoints);
@@ -284,14 +377,17 @@ namespace MCM1 {
 			this->Controls->Add(this->tbRoomTemp);
 			this->Controls->Add(this->tbTemp0);
 			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->Text = L"Моделирование процесса остывания кофе";
 			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->graph))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgTable))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
-
+private: System::Void Go(System::Windows::Forms::DataVisualization::Charting::Chart ^ Graphic);
 private: System::Void bPlot_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void bTable_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void cbRK4_CheckedChanged(System::Object^  sender, System::EventArgs^  e); 
@@ -299,11 +395,6 @@ private: System::Void cbEuler_CheckedChanged(System::Object^  sender, System::Ev
 private: System::Void cbMEuler_CheckedChanged(System::Object^  sender, System::EventArgs^  e); 
 private: System::Void cbEulerKoushi_CheckedChanged(System::Object^  sender, System::EventArgs^  e); 
 private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e);
-private: System::Void tbTemp0_TextChanged(System::Object^  sender, System::EventArgs^  e);
-private: System::Void tbRoomTemp_TextChanged(System::Object^  sender, System::EventArgs^  e);
-private: System::Void tbCoefCooling_TextChanged(System::Object^  sender, System::EventArgs^  e);
-private: System::Void tbTimePeriod_TextChanged(System::Object^  sender, System::EventArgs^  e);
-private: System::Void tbNumPoints_TextChanged(System::Object^  sender, System::EventArgs^  e);
-private: System::Void CheckMethods();
+private: System::Void CheckMethods(System::Windows::Forms::DataVisualization::Charting::Chart ^ Graphic);
 };
 }

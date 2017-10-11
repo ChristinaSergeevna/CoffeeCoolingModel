@@ -11,12 +11,13 @@ public:
 	double TCoffee, TRoom;
 	double r, time, n;
 	int selectEuler, selectEulerM, selectEC, selectRK4;
-	vector< vector<double> > table;
+	vector< vector<double> > tableMethods;
+	vector< vector<double> > tableErrors;
 
 	Equation() {}
 	Equation(double tc, double ta, double r, double t, double s) : TCoffee(tc), TRoom(ta), r(r), time(t), n(s) {}
 
-	double F(double tc)
+	double F(double x, double tc)
 	{
 		return -r * (tc - TRoom);
 	}
@@ -50,20 +51,28 @@ public:
 	vector<double> Euler()
 	{
 		vector<double> X(n), Y(n);
+		vector<double> res(n);
 		double h = time / n;
 		X[0] = 0; Y[0] = TCoffee;
 
 		for (int i = 1; i < n; i++)
 		{
 			X[i] = i * h;
-			Y[i] = Y[i - 1] + h * F(Y[i - 1]);
+			Y[i] = Y[i - 1] + h * F(X[i - 1], Y[i - 1]);
 		}
+
+		vector<double> as = analytSolF();
+		for (int i = 0; i < n; i++)
+			res.push_back(as[i] - Y[i]);
+		tableErrors.push_back(res);
+
 		return Y;
 	}
 
 	vector<double> MEuler()
 	{
 		vector<double> X(n), Y(n);
+		vector<double> res(n);
 		double h = time / n;
 		X[0] = 0; Y[0] = TCoffee;
 
@@ -72,15 +81,22 @@ public:
 		for (int i = 1; i < n; i++)
 		{
 			X[i] = i * h;
-			Y1[i] = Y[i - 1] + h * F(Y[i - 1]);
-			Y[i] = Y[i - 1] + h * (F(Y[i - 1]) + F(Y1[i])) / 2.0;
+			Y1[i] = Y[i - 1] + h * F(X[i - 1], Y[i - 1])/2.0;
+			Y[i] = Y[i - 1] + h * F(X[i-1] + h/2, Y1[i]);
 		}
+
+		vector<double> as = analytSolF();
+		for (int i = 0; i < n; i++)
+			res.push_back(as[i] - Y[i]);
+		tableErrors.push_back(res);
+
 		return Y;
 	}
 
 	vector<double> EulerCauchy()
 	{
 		vector<double> X(n), Y(n);
+		vector<double> res(n);
 		double h = time / n;
 		X[0] = 0; Y[0] = TCoffee;
 
@@ -89,15 +105,22 @@ public:
 		for (int i = 1; i < n; i++)
 		{
 			X[i] = i * h;
-			Y1[i] = h * F(Y[i - 1] + h * F(Y[i]) / 2.0);
-			Y[i] = Y[i - 1] + Y1[i];
+			Y1[i] = Y[i - 1] + h * F(X[i - 1], Y[i - 1]) ;
+			Y[i] = Y[i - 1] + h/2 * (F(X[i - 1], Y[i - 1]) + F(X[i] + h/2, Y1[i]));
 		}
+
+		vector<double> as = analytSolF();
+		for (int i = 0; i < n; i++)
+			res.push_back(as[i] - Y[i]);
+		tableErrors.push_back(res);
+
 		return Y;
 	}
 
 	vector<double> RungeKutta4()
 	{
 		vector<double> X(n), Y(n);
+		vector<double> res(n);
 		double h = time / n;
 		X[0] = 0; Y[0] = TCoffee;
 
@@ -109,12 +132,18 @@ public:
 		for (int i = 1; i < n; i++)
 		{
 			X[i] = i * h;
-			Y1[i] = h * F(Y[i - 1]);
-			Y2[i] = h * F(Y[i - 1] + Y1[i] / 2.0);
-			Y3[i] = h * F(Y[i - 1] + Y2[i] / 2.0);
-			Y4[i] = h * F(Y[i - 1] + Y3[i]);
-			Y[i] = Y[i - 1] + (Y1[i] + 2 * Y2[i] + 2 * Y3[i] + Y4[i]) / 6;
+			Y1[i] = F(X[i - 1], Y[i - 1]);
+			Y2[i] = F(X[i - 1] + h/2.0, Y[i - 1] + h*Y1[i] / 2.0);
+			Y3[i] = F(X[i - 1] + h / 2.0, Y[i - 1] + h*Y2[i] / 2.0);
+			Y4[i] = F(X[i - 1], Y[i - 1] + h*Y3[i]);
+			Y[i] = Y[i - 1] + h * (Y1[i] + 2 * Y2[i] + 2 * Y3[i] + Y4[i]) / 6;
 		}
+
+		vector<double> as = analytSolF();
+		for (int i = 0; i < n; i++)
+			res.push_back(as[i] - Y[i]);
+		tableErrors.push_back(res);
+
 		return Y;
 	}
 };
